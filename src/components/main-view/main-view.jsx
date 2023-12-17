@@ -12,7 +12,7 @@ export const MainView = () => {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                const moviesFromAPI = data.map((movie) => {
+                const moviesFromApi = data.map((movie) => {
                     return {
                         _id: movie._id,
                         Title: movie.Title,
@@ -31,7 +31,7 @@ export const MainView = () => {
                     };
                 });
 
-                setMovies(moviesFromApi);
+                setMovie(moviesFromApi);
             });
     }, []);
 
@@ -47,7 +47,7 @@ export const MainView = () => {
 
     return (
         <div>
-            {movies.map((movie) => (
+            {movie.map((movie) => (
                 <MovieCard
                     key={movie._id}
                     movie={movie}
