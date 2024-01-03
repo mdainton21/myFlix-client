@@ -3,7 +3,7 @@ export const MovieView = ({ movie, onBackClick }) => {
     return (
       <div>
         <div>
-          <img src={movie.ImagePath} />
+          <img src={movie.ImagePath} width="250"/>
         </div>
         <div>
           <span>Title: </span>
@@ -37,7 +37,7 @@ export const MovieView = ({ movie, onBackClick }) => {
         }),
         Description: PropTypes.string.isRequired,
         Director: PropTypes.shape({
-            DirectorName: PropTypes.string.isRequired,
+            Name: PropTypes.string.isRequired,
         }),
     }).isRequired,
     onBackClick: PropTypes.func.isRequired,
