@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "./movie-view.scss";
 
-export const MovieView = ({ movies = [] }) => {
+export const MovieView = ({ movies }) => {
 
   const { movieId } = useParams();
   console.log(movieId)
