@@ -1,16 +1,17 @@
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { Col, Row, Button, Container } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "./movie-view.scss";
 
-export const MovieView = ({ movies }) => {
+export const MovieView = ({ movie }) => {
+  console.log(movie);
 
   const { movieId } = useParams();
-  console.log(movieId)
-  const movie = movies.find((movie) => movie._id === movieId);
 
-  
+  const moviefind = movie.find((movie) => movie._id === movieId);
+
+  console.log(moviefind);
 
   return (
     <Container>
@@ -51,16 +52,16 @@ export const MovieView = ({ movies }) => {
 
 // Prop Constraints
 
-MovieView.propTypes = {
-  movie: PropTypes.shape({
-    ImagePath: PropTypes.string.isRequired,
-    Title: PropTypes.string.isRequired,
-    Genre: PropTypes.shape({
-      Name: PropTypes.string.isRequired,
-    }),
-    Description: PropTypes.string.isRequired,
-    Director: PropTypes.shape({
-      Name: PropTypes.string.isRequired,
-    }),
-  }).isRequired,
-};
+// MovieView.propTypes = {
+//   movie: PropTypes.shape({
+//     ImagePath: PropTypes.string.isRequired,
+//     Title: PropTypes.string.isRequired,
+//     Genre: PropTypes.shape({
+//       Name: PropTypes.string.isRequired,
+//     }),
+//     Description: PropTypes.string.isRequired,
+//     Director: PropTypes.shape({
+//       Name: PropTypes.string.isRequired,
+//     }),
+//   }).isRequired,
+// };

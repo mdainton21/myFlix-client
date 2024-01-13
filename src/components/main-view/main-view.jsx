@@ -49,6 +49,7 @@ export const MainView = () => {
                 });
 
                 setMovie(moviesFromApi);
+                console.log(moviesFromApi);
             });
     }, [token]);
 
@@ -111,7 +112,8 @@ export const MainView = () => {
                                         </div></Col>
                                     ) : (
                                         <Col md={12}>
-                                            <MovieView movie={movie}
+                                            <MovieView 
+                                                movie={movie}
                                             />
                                         </Col>
                                     )}
