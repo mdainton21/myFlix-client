@@ -46,7 +46,6 @@ export const SignupView = () => {
                     onChange={(e) => setUsername(e.target.value)}
                     required
                     minlength="4"
-                    Alphanumeric
                 />
             </Form.Group>
 

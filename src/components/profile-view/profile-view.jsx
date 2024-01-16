@@ -1,28 +1,29 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { MovieCard } from "../movie-card/movie-card"
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
-export const ProfileView = ({ user, movie, setUser, removeFav, addFav}) => {
-    const [username, setUsername] = useState(user.Username);
-    const [password, setPassword] = useState(user.Password);
-    const [email, setEmail] = useState(user.Email);
-    const [birthday, setBirthday] = useState(user.Birthday);
-    const navigate = useNavigate();
-    const favoriteMovieList = movies.filter(m => user.FavoriteMovies.includes(m._id));
-    const token = localStorage.getItem('token');
+export const ProfileView = ({ user, token, movies, setUser }) => {
+
+    const [username, setUsername] = useState(user.Username)
+    const [password, setPassword] = useState(user.password)
+    const [email, setEmail] = useState(user.email)
+    const [birthday, setBirthday] = useState(user.birthday)
+
+
+    const favMovie = user.FavoriteMovies ? movies.filter((movie) => user.FavoriteMovies.includes(movie._id)) : [];
+
+
     const handleUpdate = (event) => {
-        // this prevents the default behavior of the form which is to reload the entire page
         event.preventDefault();
 
-        const user = JSON.parse(localStorage.getItem('user'));
-
-        const data ={
+        const data = {
             Username: username,
             Password: password,
             Email: email,
             Birthday: birthday
-        }
+        };
 
-        fetch(`https://my-movies-api-23e4e5dc7a5e.herokuapp.com/users/${user.Username}`, {
+        fetch(`https://my-movie-flix-md-b48020e1b074.herokuapp.com/users/${user.Username}`, {
             method: "PUT",
             body: JSON.stringify(data),
             headers: {
@@ -32,22 +33,25 @@ export const ProfileView = ({ user, movie, setUser, removeFav, addFav}) => {
         }).then(async (response) => {
             console.log(response)
             if (response.ok) {
-                const updatedUser = await response.json();
-                localStorage.setItem('user', JSON.stringify(updatedUser));
-                setUser(updatedUser);
-                alert("Update was successful");
+                response.json();
+                alert('updated!')
             } else {
-                alert("Update failed")
+                const e = await response.text()
+                console.log(e)
+                alert("Update failed.")
             }
-        }).catch(error => {
-            console.error('Error: ', error);
-        });
-    };
+        }).then((updatedUser) => {
+            if (updatedUser) {
+                localStorage.setItem('user', JSON.stringify(updatedUser))
+                setUser(updatedUser)
+            }
+        })
+
+    }
 
 
-    // Delete User
     const handleDelete = () => {
-        fetch(`https://my-movies-api-23e4e5dc7a5e.herokuapp.com/users/${user.Username}`, {
+        fetch(`https://my-movie-flix-md-b48020e1b074.herokuapp.com/users/${user.Username}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`
@@ -55,92 +59,102 @@ export const ProfileView = ({ user, movie, setUser, removeFav, addFav}) => {
         }).then((response) => {
             if (response.ok) {
                 setUser(null);
-                alert("User has been deleted")
-                localStorage.clear();
-                navigate('/'); // go back to home page
+                alert("Your account has been deleted");
             } else {
-                alert("Something went wrong.")
+                alert("something went wrong.")
             }
         })
     }
 
-
     return (
-        <Container className="my-5">
-            <Row>
-                <Col md={5}>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>My Profile</Card.Title>
-                            <Card.Img variant="top" src="https://via.placeholder.com/250" className="w-50 rounded"/>
-                            <Card.Text>Username: {user.Username}</Card.Text>
-                            <Card.Text>Email: {user.Email}</Card.Text>
-                            <Card.Text>Birthday: {user.Birthday}</Card.Text>
-                        </Card.Body>
-                    </Card>
+        <Container>
+            <Row className="justify-content-md-center mt-4">
+                <Col>
+                    <h1>{user.Username}'s Profile</h1>
                 </Col>
-                <Col md={7}>
-                    <Form onSubmit={handleUpdate}>
-                        <Form.Group controlId="formUsername">
-                            <Form.Label>Username:</Form.Label>
-                            <Form.Control
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            minLength="5"
+            </Row>
+            <Row className="justify-content-md-center mx-3 my-4">
+            <h2 className="profile-title">Favorite movies</h2>
+                {
+                favMovie?.length !== 0 ?
+                favMovie?.map((movie) => {
+                    return (
+
+                        <Col md={6} lg={4} xl={3} className="mb-5" key={movie._id} >
+                            <MovieCard
+                                movie={movie}
+                                user={user}
+                                setUser={setUser}
+                                token={token}
                             />
-                        </Form.Group>
-                        <Form.Group controlId="formPassword">
+                        </Col>
+                    );
+                })
+                : <Col md={6}>
+                <br></br>
+                    <h3>Add some Favorite Movies!</h3>
+                </Col>
+}
+            </Row>
+
+
+
+
+
+
+            <Row className="justify-content-center">
+
+                <Col md={6} >
+                    <h2 className="profile-title">Update info</h2>
+                    <Form className="my-profile" onSubmit={handleUpdate}>
+                        <Form.Group className="mb-2" controlId="formName">
+                            <Form.Label>Name:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                                minLength="4"
+                            />
+                        </Form.Group >
+                        <Form.Group className="mb-2" controlId="formPassword">
                             <Form.Label>Password:</Form.Label>
                             <Form.Control
-                            type="password"
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Enter password"
-                            value={null}
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
                             />
                         </Form.Group>
-                        <Form.Group controlId="formEmail">
+                        <Form.Group className="mb-2" controlId="formEmail">
                             <Form.Label>Email:</Form.Label>
                             <Form.Control
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
                             />
                         </Form.Group>
                         <Form.Group controlId="formBirthday">
                             <Form.Label>Birthday:</Form.Label>
                             <Form.Control
-                            type="date"
-                            value={birthday}
-                            onChange={(e) => setBirthday(e.target.value)}
-                            />
+                                type="date"
+                                value={birthday}
+                                onChange={(e) => setBirthday(e.target.value)}
+                                required />
                         </Form.Group>
-                        <Button type="submit" onClick={handleUpdate} className="mt-2 me-2">Update</Button>
-                        <Button onClick={handleDelete} className="mt-2">Delete User</Button>
+
+                        <Button className="update" type="submit" onClick={handleUpdate}>Update</Button>
+                        <Button className="delete" onClick={handleDelete}>Delete Account</Button>
+
                     </Form>
+
                 </Col>
+
             </Row>
-            <Row>
-                <h2>Favorite Movies</h2>
-                <Row className="justify-content-center">
-                    {
-                    favoriteMovieList?.length !== 0 ?
-                    favoriteMovieList?.map((movie) => (
-                        <Col sm={7} md={5} lg={3} xl={2} className="mx-2 mt-2 mb-5 col-6 similar-movies-img" key={movie._id}>
-                            <MovieCard
-                                movie={movie}
-                                removeFav={removeFav}
-                                addFav={addFav}
-                                isFavorite={user.FavoriteMovies.includes(movie._id)}
-                            />
-                        </Col>
-                    ))
-                    : <Col>
-                    <p>There are no favorites Movies</p>
-                    </Col>
-                    }
-                </Row>
-            </Row>
+
+
         </Container>
-    );
-};
+
+    )
+}

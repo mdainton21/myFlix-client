@@ -4,14 +4,12 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "./movie-view.scss";
 
-export const MovieView = ({ movie }) => {
-  console.log(movie);
+export const MovieView = ({ movies }) => {
+  console.log(movies);
 
-  const { movieId } = useParams();
+  const { movieID } = useParams();
 
-  const moviefind = movie.find((movie) => movie._id === movieId);
-
-  console.log(moviefind);
+  const movie = movies.find((movie) => movie._id === movieID);
 
   return (
     <Container>
