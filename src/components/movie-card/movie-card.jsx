@@ -3,6 +3,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import Stack from "react-bootstrap/Stack"
 import { Link } from "react-router-dom";
 import "./movie-card.scss";
 
@@ -70,26 +71,37 @@ export const MovieCard = ({ movie, user, setUser, token }) => {
 
   return (
     <Card
-      className="h-100 mb-5 shadow"
+      className="mb-5 shadow p-1"
       style={{ backgroundColor: "rgb(70, 70, 70)" }}
     >
+      <Link to={`/movies/${encodeURIComponent(movie._id)}`}>
       <Card.Img 
         variant="top card-img"
         src={movie.ImagePath}
+        rounded
         />
+        </Link>
       <Card.Body>
-        <Card.Title>{movie.Title}   
-        {!Favorite ? (
-          <Button className="fav-btn" onClick={addFavoriteMovie}>+</Button>
-        ) : (
-          <Button className="fav-btn" onClick={removeFavoriteMovie}>-</Button>
-        )}</Card.Title>
+        <Card.Title>
+        {movie.Title}   
+        </Card.Title>
         <Card.Text>{movie.Director.Name}</Card.Text>
+        <Stack direction="horizontal" gap={2}>
+        <div>
         <Link to={`/movies/${encodeURIComponent(movie._id)}`}>
-        <Button variant="link">
+        <Button>
           More Info
         </Button>
         </Link>
+        </div>
+        <div className="p-2">
+          {!Favorite ? (
+          <Button className="fav-btn" onClick={addFavoriteMovie}>+</Button>
+        ) : (
+          <Button className="fav-btn" onClick={removeFavoriteMovie}>-</Button>
+        )}
+        </div>
+        </Stack>
       </Card.Body>
     </Card>
   );

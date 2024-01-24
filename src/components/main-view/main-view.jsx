@@ -5,7 +5,7 @@ import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { ProfileView } from "../profile-view/profile-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
-import Row from "react-bootstrap/Row";
+import { Row, Form } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
@@ -19,6 +19,10 @@ export const MainView = () => {
     const [token, setToken] = useState(storedToken ? storedToken : null);
 
     const [movie, setMovie] = useState([]);
+
+    const [search, setSearch] = useState("");
+
+    const [selectedGenre, setSelectedGenre] = useState("");
 
     useEffect(() => {
         if (!token) {
@@ -134,16 +138,46 @@ export const MainView = () => {
                                     </div></Col>
                                 ) : (
                                     <>
-                                        {movie.map((movie) => (
-                                            <Col md={6} lg={4} xl={3} className="mb-5" key={movie._id} >
-                                                <MovieCard
-                                                    movie={movie}
-                                                    user={user}
-                                                    setUser={setUser}
-                                                    token={token}
-                                                />
-                                            </Col>
-                                        ))}
+                                        <Form className="form-inline mt-5 justify-content-end">
+                                            <Form.Control
+                                                className="mb-3 w-50"
+                                                type="search"
+                                                id="searchForm"
+                                                onChange={(e) => setSearch(e.target.value)}
+                                                placeholder="Search by Name"
+                                                aria-label="Search"
+                                            />
+                                            <Form.Select className="mb-3 w-50" aria-label="Default select genre" onChange={(e) => setSelectedGenre(e.target.value)}>
+                                                <option value="" selected>Search by Genre</option>
+                                                <option value="Action">Action</option>
+                                                <option value="Comedy">Comedy</option>
+                                                <option value="Drama">Drama</option>
+                                                <option value="Horror">Horror</option>
+                                                <option value="Thriller">Thriller</option>
+                                            </Form.Select>
+
+                                        </Form>
+                                        {movie.filter((movie) => {
+                                            return selectedGenre === ""
+                                                ? movie
+                                                : movie.Genre.Name === selectedGenre;
+                                                
+                                        })
+                                            .filter((movie) => {
+                                                return search === ""
+                                                    ? movie
+                                                    : movie.Title.toLowerCase().includes(search.toLowerCase());
+                                            })
+                                            .map((movie) => (
+                                                <Col md={6} lg={4} xl={3} className="mb-5" key={movie._id} >
+                                                    <MovieCard
+                                                        movie={movie}
+                                                        user={user}
+                                                        setUser={setUser}
+                                                        token={token}
+                                                    />
+                                                </Col>
+                                            ))}
                                     </>
                                 )}
                             </>
