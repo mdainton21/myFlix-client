@@ -58,6 +58,7 @@ export const SignupView = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    minlength="4"
                 />
             </Form.Group>
 
