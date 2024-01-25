@@ -21,4 +21,4 @@ The client-side for the My-Flix App. The My-Flix app is a web application that s
 myFlixApi: (https://github.com/mdainton21/My_Flix_App)
 
 ## Link to app 
-App is live [here!] (https://my-movie-flix-md-b48020e1b074.herokuapp.com/).
+App is live [here!] (myflixmd.netlify.app).
